@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>English Naval Battle — Classroom Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sea-light: #bfe8ff;
+    --sea-mid: #8fd3fa;
+    --sea-deep: #0b4f78;
+    --sea-ink: #072f49;
+    --wood-base: #9c6234;
+    --wood-dark: #6b3e1b;
+    --wood-light: #bc7b47;
+    --wood-border: #4a280e;
+    --card-bg: rgba(255, 255, 255, 0.94);
+    --accent-gold: #f59e0b;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --radius-lg: 20px;
+    --radius-md: 12px;
+    --shadow-soft: 0 12px 30px rgba(7, 47, 73, 0.16);
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: var(--sea-ink);
+    background-color: var(--sea-light);
+    background-image:
+      radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.55) 0%, transparent 45%),
+      radial-gradient(circle at 80% 85%, rgba(143, 211, 250, 0.65) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg width='120' height='36' viewBox='0 0 120 36' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 18 Q 15 8, 30 18 T 60 18 T 90 18 T 120 18' fill='none' stroke='%23ffffff' stroke-opacity='0.42' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M0 30 Q 15 20, 30 30 T 60 30 T 90 30 T 120 30' fill='none' stroke='%2338bdf8' stroke-opacity='0.28' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-size: auto, auto, 120px 36px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  h1, h2, h3, .brand-font {
+    font-family: 'Fredoka', sans-serif;
+    letter-spacing: 0.3px;
+  }
+
+  .hidden { display: none !important; }
+
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .btn {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 13px 22px;
+    cursor: pointer;
+    transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    touch-action: manipulation;
+  }
+  .btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
+  .btn:active { transform: translateY(1px) scale(0.98); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #0284c7, #0369a1);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35);
+  }
+  .btn-gold {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(217, 119, 6, 0.35);
+  }
+  .btn-success {
+    background: linear-gradient(135deg, #22c55e, #15803d);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(22, 163, 74, 0.3);
+  }
+  .btn-danger {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.3);
+  }
+  .btn-ghost {
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--sea-deep);
+    border: 2px solid rgba(11, 79, 120, 0.2);
+  }
+
+  /* TELA INICIAL (SETUP) */
+  .setup-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-soft);
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    max-width: 820px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .header-title {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .header-title h1 {
+    margin: 0;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    color: var(--sea-deep);
+  }
+  .header-title p {
+    margin: 6px 0 0;
+    color: #335c75;
+    font-weight: 600;
+    font-size: 0.98rem;
+  }
+
+  .players-setup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 22px;
+  }
+
+  @media (max-width: 680px) {
+    .players-setup-grid {
+      grid-template-columns: 1fr;
+    }
+    .setup-card {
+      padding: 20px 16px;
+    }
+  }
+
+  .player-box {
+    background: #f0f9ff;
+    border: 2px solid #bae6fd;
+    border-radius: 16px;
+    padding: 16px;
+  }
+
+  .player-box label {
+    display: block;
+    font-weight: 800;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--sea-deep);
+    margin-bottom: 8px;
+  }
+
+  .input-text {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 2px solid #7dd3fc;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--sea-ink);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s;
+    user-select: text;
+  }
+  .input-text:focus {
+    border-color: #0284c7;
+  }
+
+  .boat-preview-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+    gap: 12px;
+  }
+
+  .boat-preview-badge {
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
+    background: #e0f2fe;
+    border: 2px solid #7dd3fc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .color-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .swatch-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.12s;
+  }
+  .swatch-btn.selected {
+    transform: scale(1.18);
+    outline: 3px solid var(--sea-ink);
+  }
+  .swatch-btn.disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .settings-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 680px) {
+    .settings-row { grid-template-columns: 1fr; }
+  }
+
+  .setting-group {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 14px 16px;
+  }
+  .setting-group > span {
+    display: block;
+    font-weight: 800;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    color: var(--sea-deep);
+    margin-bottom: 10px;
+  }
+
+  .pill-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .pill-btn {
+    flex: 1 1 auto;
+    min-width: 90px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 2px solid #cbd5e1;
+    background: #fff;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: #334155;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .pill-btn.active {
+    background: var(--sea-deep);
+    border-color: var(--sea-deep);
+    color: #fff;
+  }
+
+  @media (max-width: 680px) {
+    #level-pills {
+      flex-direction: column;
+    }
+    #level-pills .pill-btn {
+      width: 100%;
+    }
+    #time-pills .pill-btn {
+      flex: 1 1 calc(50% - 8px);
+    }
+  }
+
+  /* TOPBAR DA PARTIDA */
+  .topbar {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 2px solid rgba(11, 79, 120, 0.15);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  .scoreboard {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .score-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: #f0f9ff;
+    border: 2px solid #bae6fd;
+    font-weight: 800;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+  }
+  .score-pill.active-turn {
+    background: #fef3c7;
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+    transform: scale(1.03);
+  }
+  .score-points {
+    background: var(--sea-deep);
+    color: #fff;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+  }
+
+  .timer-box {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    background: var(--sea-deep);
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 12px;
+    min-width: 92px;
+    text-align: center;
+  }
+  .timer-box.urgent {
+    background: var(--danger);
+    animation: pulse 1s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+  }
+
+  /* ÁREA DOS TABULEIROS */
+  .turn-banner {
+    text-align: center;
+    margin: 8px auto 14px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(7, 47, 73, 0.1);
+    font-weight: 700;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .boards-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+    align-items: start;
+  }
+
+  @media (max-width: 820px) {
+    .boards-wrapper {
+      grid-template-columns: 1fr;
+      max-width: 460px;
+      margin: 0 auto;
+      gap: 20px;
+    }
+  }
+
+  /* TABULEIRO COM TEXTURA DE MADEIRA NÁUTICA */
+  .board-card {
+    border-radius: 20px;
+    padding: 16px;
+    background-color: var(--wood-base);
+    background-image:
+      repeating-linear-gradient(
+        90deg,
+        rgba(74, 40, 14, 0.14) 0px,
+        rgba(74, 40, 14, 0.14) 2px,
+        transparent 2px,
+        transparent 28px
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(0, 0, 0, 0.18) 100%);
+    border: 4px solid var(--wood-border);
+    box-shadow: 0 12px 24px rgba(45, 22, 6, 0.32), inset 0 2px 4px rgba(255,255,255,0.25);
+    transition: opacity 0.25s, transform 0.25s;
+  }
+
+  .board-card.inactive-board {
+    opacity: 0.72;
+  }
+  .board-card.target-board {
+    box-shadow: 0 0 0 4px #f59e0b, 0 14px 28px rgba(45, 22, 6, 0.38);
+  }
+
+  .board-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(56, 28, 8, 0.72);
+    color: #fef3c7;
+    padding: 8px 14px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+
+  .board-tag {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.16);
+  }
+
+  /* GRID 5 COLUNAS (A-E) + RÓTULOS DE LINHA (1-4) */
+  .naval-grid {
+    display: grid;
+    grid-template-columns: 32px repeat(5, 1fr);
+    gap: 7px;
+    align-items: center;
+  }
+
+  .coord-label {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #fef3c7;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  }
+
+  .cell-btn {
+    aspect-ratio: 1 / 1;
+    min-height: 46px;
+    width: 100%;
+    border-radius: 10px;
+    border: 2px solid #4a280e;
+    background: linear-gradient(145deg, #c68550, #9a5f31);
+    box-shadow: inset 0 2px 3px rgba(255,255,255,0.3), 0 3px 0 #4a280e;
+    color: #fffbeb;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s, background 0.15s;
+    touch-action: manipulation;
+    padding: 2px;
+  }
+
+  .cell-btn:hover:not(:disabled) {
+    background: linear-gradient(145deg, #d6945d, #ab6b39);
+    transform: translateY(-2px);
+  }
+  .cell-btn:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 #4a280e;
+  }
+  .cell-btn:disabled {
+    cursor: default;
+  }
+
+  /* ESTADOS DA CÉLULA */
+  .cell-btn.revealed-water {
+    background: linear-gradient(145deg, #38bdf8, #0284c7);
+    border-color: #075985;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.25);
+    color: #e0f2fe;
+  }
+  .cell-btn.revealed-ship {
+    background: linear-gradient(145deg, #fef08a, #f59e0b);
+    border-color: #92400e;
+    box-shadow: 0 0 14px rgba(245, 158, 11, 0.8);
+    animation: popShip 0.4s ease;
+  }
+  .cell-btn.setup-selected {
+    background: linear-gradient(145deg, #bbf7d0, #22c55e);
+    border-color: #14532d;
+  }
+
+  @keyframes popShip {
+    0% { transform: scale(0.5); }
+    70% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+
+  /* MODAIS COM FUNDO DO MAR DESFOCADO (BLUR) */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(14, 116, 179, 0.36);
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .modal-card {
+    background: #ffffff;
+    border-radius: 24px;
+    max-width: 580px;
+    width: 100%;
+    padding: 26px;
+    box-shadow: 0 24px 50px rgba(7, 47, 73, 0.35);
+    border: 3px solid #bae6fd;
+    text-align: center;
+    animation: modalIn 0.2s ease-out;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.94) translateY(8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .challenge-badge {
+    display: inline-block;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-weight: 800;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+
+  /* CRONÔMETRO DE 10 SEGUNDOS DO DESAFIO */
+  .challenge-timer-wrap {
+    margin: 8px auto 12px;
+    max-width: 340px;
+  }
+  .challenge-timer-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--sea-deep);
+    margin-bottom: 6px;
+  }
+  .challenge-timer-header.warning {
+    color: #d97706;
+  }
+  .challenge-timer-header.expired {
+    color: var(--danger);
+    animation: pulse 0.9s infinite;
+  }
+  .challenge-progress-track {
+    width: 100%;
+    height: 10px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .challenge-progress-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #0284c7, #38bdf8);
+    border-radius: 999px;
+    transition: width 0.25s linear, background 0.25s ease;
+  }
+  .challenge-progress-fill.warning {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+  }
+  .challenge-progress-fill.expired {
+    background: var(--danger);
+  }
+
+  .timeup-alert {
+    background: #fef2f2;
+    border: 2px solid #fca5a5;
+    color: #991b1b;
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    animation: modalIn 0.2s ease-out;
+  }
+
+  .challenge-prompt {
+    font-size: clamp(1.2rem, 3vw, 1.55rem);
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.42;
+    margin: 10px 0 18px;
+    background: #f8fafc;
+    padding: 18px;
+    border-radius: 16px;
+    border: 2px solid #e2e8f0;
+  }
+
+  .teacher-answer-box {
+    background: #fefce8;
+    border: 2px dashed #eab308;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 18px;
+    color: #713f12;
+    font-weight: 700;
+    font-size: 0.98rem;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .modal-actions .btn {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  /* SETUP SECRETO DO BARCO */
+  .secret-board-wrap {
+    max-width: 380px;
+    margin: 16px auto;
+  }
+
+  /* TELA FINAL E CANVAS GERADO */
+  .result-preview-img {
+    width: 100%;
+    max-width: 480px;
+    border-radius: 16px;
+    border: 3px solid #bae6fd;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+    margin: 14px auto;
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+  <!-- ==================== 1. TELA INICIAL ==================== -->
+  <main id="screen-setup" class="container">
+    <div class="setup-card">
+      <div class="header-title">
+        <h1>⚓ English Naval Battle</h1>
+        <p>Configure os times, escolha a cor dos barcos e o nível dos desafios</p>
+      </div>
+
+      <div class="players-setup-grid">
+        <!-- JOGADOR 1 -->
+        <div class="player-box">
+          <label for="p1-name">Jogador / Equipe 1</label>
+          <input id="p1-name" class="input-text" type="text" value="Team Sharks" maxlength="20" placeholder="Nome do aluno ou grupo" />
+          <div class="boat-preview-row">
+            <div id="p1-boat-preview" class="boat-preview-badge"></div>
+            <div>
+              <div style="font-size:0.78rem;font-weight:700;color:#475569;margin-bottom:6px;">Cor do barco:</div>
+              <div id="p1-swatches" class="color-swatches"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- JOGADOR 2 -->
+        <div class="player-box">
+          <label for="p2-name">Jogador / Equipe 2</label>
+          <input id="p2-name" class="input-text" type="text" value="Team Pirates" maxlength="20" placeholder="Nome do aluno ou grupo" />
+          <div class="boat-preview-row">
+            <div id="p2-boat-preview" class="boat-preview-badge"></div>
+            <div>
+              <div style="font-size:0.78rem;font-weight:700;color:#475569;margin-bottom:6px;">Cor do barco:</div>
+              <div id="p2-swatches" class="color-swatches"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="setting-group">
+          <span>Nível dos Desafios</span>
+          <div id="level-pills" class="pill-group">
+            <button type="button" class="pill-btn active" data-level="basic">Básico</button>
+            <button type="button" class="pill-btn" data-level="intermediate">Intermediário</button>
+            <button type="button" class="pill-btn" data-level="advanced">Avançado</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <span>Tempo da Partida</span>
+          <div id="time-pills" class="pill-group">
+            <button type="button" class="pill-btn" data-minutes="3">3 min</button>
+            <button type="button" class="pill-btn active" data-minutes="5">5 min</button>
+            <button type="button" class="pill-btn" data-minutes="8">8 min</button>
+            <button type="button" class="pill-btn" data-minutes="10">10 min</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center;">
+        <button id="btn-start-setup" type="button" class="btn btn-gold" style="width:100%;max-width:340px;font-size:1.15rem;padding:15px;">
+          Posicionar Barcos 🚢
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== 2. TELA DE POSICIONAMENTO SECRETO ==================== -->
+  <section id="screen-place" class="container hidden">
+    <div class="setup-card" style="max-width:520px;text-align:center;">
+      <div style="text-align:left;margin-bottom:12px;">
+        <button id="btn-place-back" type="button" class="btn btn-ghost" style="padding:7px 14px;font-size:0.88rem;">
+          ← Voltar
+        </button>
+      </div>
+
+      <div id="place-privacy-cover">
+        <div style="font-size:3rem;margin-bottom:8px;">🙈</div>
+        <h2 id="privacy-title" style="color:var(--sea-deep);margin:0 0 8px;">Vez de Team Sharks esconder o barco</h2>
+        <p id="privacy-desc" style="color:#475569;font-weight:600;margin-bottom:22px;">
+          Peça para o adversário não olhar para a tela agora!
+        </p>
+        <button id="btn-reveal-placer" type="button" class="btn btn-primary">
+          Estou pronto, mostrar meu tabuleiro
+        </button>
+      </div>
+
+      <div id="place-board-area" class="hidden">
+        <h2 id="placer-heading" style="color:var(--sea-deep);margin:0 0 6px;">Escolha 1 casa para o seu barco</h2>
+        <p style="color:#475569;font-size:0.92rem;font-weight:600;margin:0 0 12px;">
+          Toque na coordenada desejada e confirme abaixo.
+        </p>
+
+        <div class="secret-board-wrap">
+          <div class="board-card">
+            <div id="secret-grid" class="naval-grid"></div>
+          </div>
+        </div>
+
+        <button id="btn-confirm-ship" type="button" class="btn btn-success" disabled style="width:100%;max-width:300px;margin-top:10px;">
+          Confirmar Posição 🔒
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 3. TELA DA PARTIDA ==================== -->
+  <div id="screen-game" class="hidden" style="display:flex;flex-direction:column;min-height:100vh;">
+    <header class="topbar">
+      <button id="btn-back-home" type="button" class="btn btn-ghost" style="padding:8px 14px;font-size:0.92rem;">
+        ← Início
+      </button>
+
+      <div class="scoreboard">
+        <div id="score-p1" class="score-pill active-turn">
+          <span id="hud-p1-icon"></span>
+          <span id="hud-p1-name">Team 1</span>
+          <span id="hud-p1-pts" class="score-points">0</span>
+        </div>
+
+        <div id="game-timer" class="timer-box">05:00</div>
+
+        <div id="score-p2" class="score-pill">
+          <span id="hud-p2-icon"></span>
+          <span id="hud-p2-name">Team 2</span>
+          <span id="hud-p2-pts" class="score-points">0</span>
+        </div>
+      </div>
+
+      <div id="hud-level-badge" style="font-weight:800;font-size:0.82rem;color:var(--sea-deep);background:#e0f2fe;padding:6px 12px;border-radius:999px;">
+        BÁSICO
+      </div>
+    </header>
+
+    <main class="container" style="justify-content:flex-start;padding-top:12px;">
+      <div style="text-align:center;">
+        <div id="turn-banner" class="turn-banner"></div>
+      </div>
+
+      <div class="boards-wrapper">
+        <div id="board-wrap-1" class="board-card">
+          <div class="board-header">
+            <span id="board-title-1">Frota de Team 1</span>
+            <span id="board-status-1" class="board-tag">Defendendo</span>
+          </div>
+          <div id="grid-1" class="naval-grid"></div>
+        </div>
+
+        <div id="board-wrap-2" class="board-card">
+          <div class="board-header">
+            <span id="board-title-2">Frota de Team 2</span>
+            <span id="board-status-2" class="board-tag">Alvo do Ataque</span>
+          </div>
+          <div id="grid-2" class="naval-grid"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== MODAL: DESAFIO EM INGLÊS ==================== -->
+  <div id="modal-challenge" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div id="challenge-coord-badge" class="challenge-badge">Coordenada A1 • Água!</div>
+      <div id="challenge-type-label" style="font-size:0.85rem;font-weight:700;color:#64748b;">
+        Responda para marcar +10 pontos
+      </div>
+
+      <!-- Contador de 10 segundos -->
+      <div class="challenge-timer-wrap">
+        <div id="challenge-timer-text" class="challenge-timer-header">
+          ⏱️ Tempo para responder: <span id="challenge-seconds">10</span>s
+        </div>
+        <div class="challenge-progress-track">
+          <div id="challenge-progress-bar" class="challenge-progress-fill"></div>
+        </div>
+      </div>
+
+      <!-- Notificação ao estourar os 10 segundos -->
+      <div id="challenge-timeup-alert" class="timeup-alert hidden">
+        ⏰ Tempo esgotado! Professor, marque abaixo se o aluno acertou ou errou.
+      </div>
+
+      <div id="challenge-text" class="challenge-prompt">
+        What's your name?
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <button id="btn-toggle-answer" type="button" class="btn btn-ghost" style="font-size:0.88rem;padding:8px 14px;">
+          👁️ Mostrar Gabarito / Sugestão (Professor)
+        </button>
+      </div>
+
+      <div id="teacher-answer-box" class="teacher-answer-box hidden"></div>
+
+      <div class="modal-actions">
+        <button id="btn-answer-correct" type="button" class="btn btn-success">
+          ✅ Acertou (+10 pts)
+        </button>
+        <button id="btn-answer-wrong" type="button" class="btn btn-danger">
+          ❌ Errou (0 pts)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: CONFIRMAR SAÍDA ==================== -->
+  <div id="modal-exit" class="modal-overlay hidden">
+    <div class="modal-card" style="max-width:440px;">
+      <div style="font-size:2.8rem;margin-bottom:6px;">⚠️</div>
+      <h2 style="color:var(--danger);margin:0 0 10px;">Sair da Partida Atual?</h2>
+      <p style="color:#334155;font-weight:600;line-height:1.5;margin-bottom:22px;">
+        Se você voltar para o início agora, <strong>todo o progresso, posições dos barcos e pontuações desta partida serão perdidos</strong>. Deseja prosseguir?
+      </p>
+      <div class="modal-actions">
+        <button id="btn-cancel-exit" type="button" class="btn btn-ghost">Continuar Jogando</button>
+        <button id="btn-confirm-exit" type="button" class="btn btn-danger">Sim, Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: FIM DE JOGO + IMAGEM GERADA ==================== -->
+  <div id="modal-gameover" class="modal-overlay hidden">
+    <div class="modal-card" style="max-width:560px;">
+      <h2 id="gameover-heading" style="color:var(--sea-deep);margin:0 0 6px;font-size:1.7rem;">
+        🏆 Fim de Jogo!
+      </h2>
+      <p id="gameover-reason" style="color:#475569;font-weight:700;margin:0 0 10px;"></p>
+
+      <img id="gameover-image" class="result-preview-img" alt="Resumo da Partida" />
+      <canvas id="result-canvas" width="900" height="540" class="hidden"></canvas>
+
+      <div class="modal-actions" style="margin-top:16px;">
+        <button id="btn-download-result" type="button" class="btn btn-gold">
+          📥 Baixar Imagem do Resultado
+        </button>
+        <button id="btn-new-game" type="button" class="btn btn-primary">
+          🔄 Nova Partida
+        </button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ==========================================================================
+   BANCO DE 240 QUESTÕES (80 BÁSICO, 80 INTERMEDIÁRIO, 80 AVANÇADO)
+   ========================================================================== */
+const QUESTION_BANK = {
+  basic: [
+    // Personal Questions (28)
+    { type: "Personal Question", q: "What's your name?", a: "My name is [Name]. / I'm [Name]." },
+    { type: "Personal Question", q: "How old are you?", a: "I am [age] years old." },
+    { type: "Personal Question", q: "Where are you from?", a: "I am from Brazil / [City]." },
+    { type: "Personal Question", q: "How are you today?", a: "I'm fine / good / great, thank you!" },
+    { type: "Personal Question", q: "What is your favorite color?", a: "My favorite color is blue / red / green..." },
+    { type: "Personal Question", q: "Do you have any pets?", a: "Yes, I have a dog/cat. / No, I don't." },
+    { type: "Personal Question", q: "What is your favorite food?", a: "My favorite food is pizza / pasta..." },
+    { type: "Personal Question", q: "When is your birthday?", a: "My birthday is in [Month] / on [Date]." },
+    { type: "Personal Question", q: "What is your favorite sport?", a: "My favorite sport is soccer / basketball..." },
+    { type: "Personal Question", q: "Do you have brothers or sisters?", a: "Yes, I have [number] brother(s)/sister(s). / No, I'm an only child." },
+    { type: "Personal Question", q: "What is your favorite animal?", a: "My favorite animal is the lion / dog / dolphin..." },
+    { type: "Personal Question", q: "What time do you wake up?", a: "I wake up at [7:00] AM." },
+    { type: "Personal Question", q: "Can you swim?", a: "Yes, I can. / No, I can't." },
+    { type: "Personal Question", q: "Can you ride a bicycle?", a: "Yes, I can. / No, I can't." },
+    { type: "Personal Question", q: "What is your favorite school subject?", a: "My favorite subject is English / Math / Science..." },
+    { type: "Personal Question", q: "What day is it today?", a: "Today is Monday / Tuesday / Wednesday..." },
+    { type: "Personal Question", q: "What's the weather like today?", a: "It's sunny / cloudy / rainy / hot." },
+    { type: "Personal Question", q: "Do you like ice cream?", a: "Yes, I do! / No, I don't." },
+    { type: "Personal Question", q: "What is your mother's name?", a: "Her name is [Name]." },
+    { type: "Personal Question", q: "What is your father's name?", a: "His name is [Name]." },
+    { type: "Personal Question", q: "Where do you live?", a: "I live in [City / Neighborhood]." },
+    { type: "Personal Question", q: "What do you drink for breakfast?", a: "I drink milk / juice / coffee / water." },
+    { type: "Personal Question", q: "What is your favorite season of the year?", a: "My favorite season is summer / winter / spring / fall." },
+    { type: "Personal Question", q: "Are you hungry right now?", a: "Yes, I am. / No, I'm not." },
+    { type: "Personal Question", q: "What is your favorite fruit?", a: "My favorite fruit is apple / banana / mango..." },
+    { type: "Personal Question", q: "Do you like English classes?", a: "Yes, I do! / Yes, I love English." },
+    { type: "Personal Question", q: "What color are your eyes?", a: "My eyes are brown / black / green / blue." },
+    { type: "Personal Question", q: "What do you like to do on weekends?", a: "I like to play games / watch TV / play soccer." },
+
+    // Sentence Transformation (26)
+    { type: "Transform the Sentence", q: "Change into the negative form: \"I can skate very well.\"", a: "I cannot (can't) skate very well." },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"She is a teacher.\"", a: "She is not (isn't) a teacher." },
+    { type: "Transform the Sentence", q: "Change into the interrogative form: \"You are happy.\"", a: "Are you happy?" },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"They like pizza.\"", a: "They do not (don't) like pizza." },
+    { type: "Transform the Sentence", q: "Change into the interrogative form: \"He can play the guitar.\"", a: "Can he play the guitar?" },
+    { type: "Transform the Sentence", q: "Change into the affirmative form: \"I don't have a dog.\"", a: "I have a dog." },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"We are students.\"", a: "We are not (aren't) students." },
+    { type: "Transform the Sentence", q: "Change into the interrogative form: \"She likes apples.\"", a: "Does she like apples?" },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"He plays soccer every day.\"", a: "He does not (doesn't) play soccer every day." },
+    { type: "Transform the Sentence", q: "Change into the plural form: \"This is a red book.\"", a: "These are red books." },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"I am tall.\"", a: "I am not (I'm not) tall." },
+    { type: "Transform the Sentence", q: "Change into the interrogative form: \"They are at school.\"", a: "Are they at school?" },
+    { type: "Transform the Sentence", q: "Change into the affirmative form: \"She doesn't drink milk.\"", a: "She drinks milk." },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"My brother can swim.\"", a: "My brother cannot (can't) swim." },
+    { type: "Transform the Sentence", q: "Change into the interrogative form: \"You like video games.\"", a: "Do you like video games?" },
+    { type: "Transform the Sentence", q: "Change into the plural form: \"That is a big dog.\"", a: "Those are big dogs." },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"It is cold today.\"", a: "It is not (isn't) cold today." },
+    { type: "Transform the Sentence", q: "Change into the interrogative form: \"He is your brother.\"", a: "Is he your brother?" },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"You have a blue pen.\"", a: "You do not (don't) have a blue pen." },
+    { type: "Transform the Sentence", q: "Change into the affirmative form: \"We can't fly.\"", a: "We can fly." },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"She watches TV at night.\"", a: "She does not (doesn't) watch TV at night." },
+    { type: "Transform the Sentence", q: "Change into the interrogative form: \"She can dance.\"", a: "Can she dance?" },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"There is a cat on the sofa.\"", a: "There is not (isn't) a cat on the sofa." },
+    { type: "Transform the Sentence", q: "Change into the interrogative form: \"There are two chairs here.\"", a: "Are there two chairs here?" },
+    { type: "Transform the Sentence", q: "Change into the affirmative form: \"He isn't my friend.\"", a: "He is my friend." },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"I study English in the morning.\"", a: "I do not (don't) study English in the morning." },
+
+    // Unscramble (26)
+    { type: "Unscramble the Sentence", q: "not - she - like - does - chocolate", a: "She does not like chocolate." },
+    { type: "Unscramble the Sentence", q: "is - name - what - your - ?", a: "What is your name?" },
+    { type: "Unscramble the Sentence", q: "am - I - Brazil - from", a: "I am from Brazil." },
+    { type: "Unscramble the Sentence", q: "can - play - football - he", a: "He can play football." },
+    { type: "Unscramble the Sentence", q: "are - how - you - old - ?", a: "How old are you?" },
+    { type: "Unscramble the Sentence", q: "have - I - a - black - cat", a: "I have a black cat." },
+    { type: "Unscramble the Sentence", q: "not - are - they - tired", a: "They are not tired." },
+    { type: "Unscramble the Sentence", q: "favorite - blue - my - is - color", a: "My favorite color is blue." },
+    { type: "Unscramble the Sentence", q: "do - where - live - you - ?", a: "Where do you live?" },
+    { type: "Unscramble the Sentence", q: "every - goes - she - school - to - day", a: "She goes to school every day." },
+    { type: "Unscramble the Sentence", q: "apples - like - I - bananas - and", a: "I like apples and bananas." },
+    { type: "Unscramble the Sentence", q: "speak - you - can - English - ?", a: "Can you speak English?" },
+    { type: "Unscramble the Sentence", q: "is - big - house - my - very", a: "My house is very big." },
+    { type: "Unscramble the Sentence", q: "not - do - coffee - drink - I", a: "I do not drink coffee." },
+    { type: "Unscramble the Sentence", q: "are - friends - we - good", a: "We are good friends." },
+    { type: "Unscramble the Sentence", q: "on - book - the - is - table - the", a: "The book is on the table." },
+    { type: "Unscramble the Sentence", q: "time - it - what - is - ?", a: "What time is it?" },
+    { type: "Unscramble the Sentence", q: "has - she - eyes - green", a: "She has green eyes." },
+    { type: "Unscramble the Sentence", q: "in - park - the - play - children - the", a: "The children play in the park." },
+    { type: "Unscramble the Sentence", q: "today - sunny - is - it", a: "It is sunny today." },
+    { type: "Unscramble the Sentence", q: "mother - my - doctor - is - a", a: "My mother is a doctor." },
+    { type: "Unscramble the Sentence", q: "not - can - swim - I", a: "I can not (cannot) swim." },
+    { type: "Unscramble the Sentence", q: "do - pets - have - you - any - ?", a: "Do you have any pets?" },
+    { type: "Unscramble the Sentence", q: "reads - night - at - he - books", a: "He reads books at night." },
+    { type: "Unscramble the Sentence", q: "water - cold - is - the", a: "The water is cold." },
+    { type: "Unscramble the Sentence", q: "new - have - I - shoes - white", a: "I have new white shoes." }
+  ],
+
+  intermediate: [
+    // Personal Questions (28)
+    { type: "Personal Question", q: "What did you do last weekend?", a: "Last weekend I visited my family / played games / watched a movie." },
+    { type: "Personal Question", q: "What are you going to do tomorrow?", a: "Tomorrow I am going to study / go to school / rest." },
+    { type: "Personal Question", q: "How often do you exercise or play sports?", a: "I exercise twice a week / every day / rarely." },
+    { type: "Personal Question", q: "What kind of music do you enjoy listening to?", a: "I enjoy listening to rock / pop / hip-hop..." },
+    { type: "Personal Question", q: "What is the best movie you have ever seen?", a: "The best movie I have ever seen is [Movie]." },
+    { type: "Personal Question", q: "Where did you go on your last vacation?", a: "I went to the beach / another city / stayed home." },
+    { type: "Personal Question", q: "What were you doing yesterday at 8 PM?", a: "I was having dinner / watching TV / studying." },
+    { type: "Personal Question", q: "Which is better: the beach or the mountains? Why?", a: "I think the beach is better because it's fun / relaxing." },
+    { type: "Personal Question", q: "What job would you like to have in the future?", a: "I would like to be a doctor / engineer / teacher / programmer." },
+    { type: "Personal Question", q: "Have you ever traveled by airplane?", a: "Yes, I have. / No, I haven't." },
+    { type: "Personal Question", q: "What do you usually do when it rains?", a: "When it rains, I usually stay indoors and watch movies." },
+    { type: "Personal Question", q: "How long does it take you to get to school?", a: "It takes me about [20] minutes." },
+    { type: "Personal Question", q: "What is something you are really good at?", a: "I am really good at drawing / math / video games / sports." },
+    { type: "Personal Question", q: "Who is a person you admire and why?", a: "I admire my mother/father because they work very hard." },
+    { type: "Personal Question", q: "What did you eat for lunch yesterday?", a: "Yesterday I ate rice, beans, and chicken." },
+    { type: "Personal Question", q: "Do you prefer studying alone or in a group?", a: "I prefer studying alone because I can focus better." },
+    { type: "Personal Question", q: "What country would you love to visit?", a: "I would love to visit Japan / England / the USA..." },
+    { type: "Personal Question", q: "What should someone do to stay healthy?", a: "They should eat healthy food, drink water, and exercise." },
+    { type: "Personal Question", q: "How has technology changed your daily life?", a: "It helps me study, communicate with friends, and find information." },
+    { type: "Personal Question", q: "What was your favorite toy or game as a child?", a: "My favorite toy was [Toy] / hide-and-seek." },
+    { type: "Personal Question", q: "Are you afraid of anything? What is it?", a: "Yes, I am afraid of spiders / heights / the dark." },
+    { type: "Personal Question", q: "What is the most difficult subject for you at school?", a: "The most difficult subject for me is Physics / History..." },
+    { type: "Personal Question", q: "If you found a wallet on the street, what would you do?", a: "I would try to return it to the owner." },
+    { type: "Personal Question", q: "How often do you use social media?", a: "I use social media every day / a few times a week." },
+    { type: "Personal Question", q: "What makes you laugh the most?", a: "Funny videos and jokes with my friends make me laugh." },
+    { type: "Personal Question", q: "Have you ever cooked a meal by yourself?", a: "Yes, I have cooked pasta / eggs / a cake." },
+    { type: "Personal Question", q: "What time did you go to bed last night?", a: "I went to bed at [10:30] PM." },
+    { type: "Personal Question", q: "Why is learning English important for you?", a: "It is important for travel, jobs, and understanding games/movies." },
+
+    // Sentence Transformation (26)
+    { type: "Transform the Sentence", q: "Change into the Simple Past: \"She goes to the mall every Saturday.\"", a: "She went to the mall last Saturday." },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"They bought a new car yesterday.\"", a: "They did not (didn't) buy a new car yesterday." },
+    { type: "Transform the Sentence", q: "Change into the interrogative form: \"He finished his homework.\"", a: "Did he finish his homework?" },
+    { type: "Transform the Sentence", q: "Change into the Future with 'going to': \"I travel to Rio.\"", a: "I am going to travel to Rio." },
+    { type: "Transform the Sentence", q: "Use the comparative form: \"Gold / expensive / silver.\"", a: "Gold is more expensive than silver." },
+    { type: "Transform the Sentence", q: "Change into the Present Continuous: \"She reads a book.\"", a: "She is reading a book." },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"We were watching the game.\"", a: "We were not (weren't) watching the game." },
+    { type: "Transform the Sentence", q: "Change into the Present Perfect: \"I visited London.\"", a: "I have visited London." },
+    { type: "Transform the Sentence", q: "Change into the interrogative form: \"She has lived here for five years.\"", a: "Has she lived here for five years?" },
+    { type: "Transform the Sentence", q: "Use the superlative form: \"Mount Everest / high / mountain in the world.\"", a: "Mount Everest is the highest mountain in the world." },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"You should eat so much sugar.\"", a: "You should not (shouldn't) eat so much sugar." },
+    { type: "Transform the Sentence", q: "Change into the Simple Past: \"They are very happy today.\"", a: "They were very happy yesterday." },
+    { type: "Transform the Sentence", q: "Change into the interrogative form: \"You were sleeping when I called.\"", a: "Were you sleeping when I called?" },
+    { type: "Transform the Sentence", q: "Rewrite using 'used to': \"I played with dolls when I was little.\"", a: "I used to play with dolls when I was little." },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"He will arrive on time.\"", a: "He will not (won't) arrive on time." },
+    { type: "Transform the Sentence", q: "Change into the interrogative form: \"They will help us tomorrow.\"", a: "Will they help us tomorrow?" },
+    { type: "Transform the Sentence", q: "Combine using 'because': \"She stayed home. She was sick.\"", a: "She stayed home because she was sick." },
+    { type: "Transform the Sentence", q: "Change into the Simple Past: \"He writes emails every morning.\"", a: "He wrote emails yesterday morning." },
+    { type: "Transform the Sentence", q: "Change into the negative form: \"I saw anyone at the park.\"", a: "I didn't see anyone at the park. / I saw no one at the park." },
+    { type: "Transform the Sentence", q: "Use the comparative form: \"My phone / good / yours.\"", a: "My phone is better than yours." },
+    { type: "Transform the Sentence", q: "Change into the Present Perfect negative: \"They have eaten lunch.\"", a: "They have not (haven't) eaten lunch." },
+    { type: "Transform the Sentence", q: "Change into the Past Continuous: \"He runs in the park.\"", a: "He was running in the park." },
+    { type: "Transform the Sentence", q: "Rewrite using 'mustn't': \"Don't touch that wire!\"", a: "You mustn't touch that wire!" },
+    { type: "Transform the Sentence", q: "Change into the interrogative form: \"She had to wake up early.\"", a: "Did she have to wake up early?" },
+    { type: "Transform the Sentence", q: "Change into the affirmative form: \"We didn't understand the lesson.\"", a: "We understood the lesson." },
+    { type: "Transform the Sentence", q: "Use 'too' instead of 'very': \"This coffee is very hot to drink.\"", a: "This coffee is too hot to drink." },
+
+    // Unscramble (26)
+    { type: "Unscramble the Sentence", q: "yesterday - went - we - to - cinema - the", a: "We went to the cinema yesterday." },
+    { type: "Unscramble the Sentence", q: "have - never - I - sushi - eaten", a: "I have never eaten sushi." },
+    { type: "Unscramble the Sentence", q: "going - rain - is - it - to - tonight", a: "It is going to rain tonight." },
+    { type: "Unscramble the Sentence", q: "than - taller - is - brother - his - Mark", a: "Mark is taller than his brother." },
+    { type: "Unscramble the Sentence", q: "were - what - doing - you - yesterday - ?", a: "What were you doing yesterday?" },
+    { type: "Unscramble the Sentence", q: "should - more - drink - water - you", a: "You should drink more water." },
+    { type: "Unscramble the Sentence", q: "since - have - lived - 2018 - here - they", a: "They have lived here since 2018." },
+    { type: "Unscramble the Sentence", q: "didn't - party - the - come - to - she", a: "She didn't come to the party." },
+    { type: "Unscramble the Sentence", q: "most - the - is - cheetah - animal - fast", a: "The cheetah is the fastest animal." },
+    { type: "Unscramble the Sentence", q: "when - arrived - I - sleeping - was - he", a: "When I arrived, he was sleeping." },
+    { type: "Unscramble the Sentence", q: "you - ever - been - have - Paris - to - ?", a: "Have you ever been to Paris?" },
+    { type: "Unscramble the Sentence", q: "will - next - travel - year - we - abroad", a: "We will travel abroad next year." },
+    { type: "Unscramble the Sentence", q: "study - must - harder - exam - the - for - you", a: "You must study harder for the exam." },
+    { type: "Unscramble the Sentence", q: "bought - a - she - dress - beautiful - red", a: "She bought a beautiful red dress." },
+    { type: "Unscramble the Sentence", q: "did - why - leave - early - so - they - ?", a: "Why did they leave so early?" },
+    { type: "Unscramble the Sentence", q: "not - enough - old - drive - is - to - he", a: "He is not old enough to drive." },
+    { type: "Unscramble the Sentence", q: "used - live - in - to - village - a - I", a: "I used to live in a village." },
+    { type: "Unscramble the Sentence", q: "while - cooking - was - music - listened - to - she", a: "While she was cooking, she listened to music." },
+    { type: "Unscramble the Sentence", q: "already - finished - have - homework - my - I", a: "I have already finished my homework." },
+    { type: "Unscramble the Sentence", q: "if - rains - it - home - stay - will - we", a: "If it rains, we will stay home." },
+    { type: "Unscramble the Sentence", q: "much - how - cost - ticket - the - did - ?", a: "How much did the ticket cost?" },
+    { type: "Unscramble the Sentence", q: "looking - am - keys - for - my - I", a: "I am looking for my keys." },
+    { type: "Unscramble the Sentence", q: "nobody - answer - the - knew - question - to - the", a: "Nobody knew the answer to the question." },
+    { type: "Unscramble the Sentence", q: "better - feeling - today - are - you - ?", a: "Are you feeling better today?" },
+    { type: "Unscramble the Sentence", q: "forgot - lock - door - to - the - he", a: "He forgot to lock the door." },
+    { type: "Unscramble the Sentence", q: "as - fast - runs - as - sister - his - she", a: "She runs as fast as his sister." }
+  ],
+
+  advanced: [
+    // Personal Questions (28)
+    { type: "Personal Question", q: "If you could change one historical event, what would it be and why?", a: "Open answer using Second Conditional: 'If I could change..., I would...'" },
+    { type: "Personal Question", q: "What do you think will be the biggest challenge for humanity in 2050?", a: "Open answer discussing climate change, AI, or resource management." },
+    { type: "Personal Question", q: "If you had been born 100 years ago, how would your life have been different?", a: "Open answer using Third Conditional: 'If I had been born..., I would have...'" },
+    { type: "Personal Question", q: "Do you believe artificial intelligence will replace more jobs than it creates?", a: "Open opinion answer with supporting arguments." },
+    { type: "Personal Question", q: "What is a habit you wish you had started earlier in life?", a: "Open answer using 'I wish I had + past participle...'" },
+    { type: "Personal Question", q: "How do you handle stressful situations under tight deadlines?", a: "Open answer describing coping and organizational strategies." },
+    { type: "Personal Question", q: "Is it better to be a specialist in one field or know a little about many things?", a: "Open comparative/argumentative answer." },
+    { type: "Personal Question", q: "What book, film, or song has deeply influenced your worldview?", a: "Open answer explaining the impact and message." },
+    { type: "Personal Question", q: "If you were given a million dollars to start a social project, what would you build?", a: "Open answer using Second Conditional." },
+    { type: "Personal Question", q: "Do you think social media brings people closer together or makes them more isolated?", a: "Open balanced or persuasive response." },
+    { type: "Personal Question", q: "What skill do you think schools should teach that they currently don't?", a: "Open answer (e.g., financial literacy, emotional intelligence, coding)." },
+    { type: "Personal Question", q: "Have you ever changed your mind completely about an important topic?", a: "Open reflective answer using narrative tenses." },
+    { type: "Personal Question", q: "What does 'success' mean to you personally?", a: "Open philosophical/personal definition." },
+    { type: "Personal Question", q: "If you could have dinner with any three people, dead or alive, who would you choose?", a: "Open answer with justification." },
+    { type: "Personal Question", q: "How important is preserving local culture in an increasingly globalized world?", a: "Open argumentative answer." },
+    { type: "Personal Question", q: "What is the biggest misconception people often have about you?", a: "Open personal reflection." },
+    { type: "Personal Question", q: "Would you rather have the ability to read minds or see ten minutes into the future?", a: "Open answer explaining pros and cons." },
+    { type: "Personal Question", q: "What role does failure play in achieving long-term goals?", a: "Open answer discussing resilience and learning from mistakes." },
+    { type: "Personal Question", q: "If you could live in any era of history for a week, which one would you pick?", a: "Open answer using Second Conditional." },
+    { type: "Personal Question", q: "How do you distinguish reliable news from misinformation online?", a: "Open answer mentioning fact-checking and credible sources." },
+    { type: "Personal Question", q: "What is a small daily action that significantly improves your productivity?", a: "Open answer describing routines or habits." },
+    { type: "Personal Question", q: "Do you think space exploration is worth the massive financial investment?", a: "Open opinion answer weighing scientific progress vs. earthly needs." },
+    { type: "Personal Question", q: "What advice would you give to your younger self five years ago?", a: "Open answer using modal verbs or conditionals." },
+    { type: "Personal Question", q: "How does learning a foreign language change the way you think?", a: "Open answer discussing cultural perspectives and cognition." },
+    { type: "Personal Question", q: "What kind of legacy would you like to leave behind?", a: "Open reflective answer." },
+    { type: "Personal Question", q: "In what situations, if any, is it acceptable to tell a white lie?", a: "Open ethical/situational discussion." },
+    { type: "Personal Question", q: "What invention do you think humanity would be better off without?", a: "Open opinion with justification." },
+    { type: "Personal Question", q: "How do you maintain a healthy balance between screen time and offline life?", a: "Open answer describing boundaries and hobbies." },
+
+    // Sentence Transformation (26)
+    { type: "Transform the Sentence", q: "Change into the Passive Voice: \"Shakespeare wrote Hamlet.\"", a: "Hamlet was written by Shakespeare." },
+    { type: "Transform the Sentence", q: "Change into Reported Speech: \"She said, 'I am working on a new project.'\"", a: "She said (that) she was working on a new project." },
+    { type: "Transform the Sentence", q: "Rewrite using Third Conditional: \"I didn't study, so I failed the test.\"", a: "If I had studied, I wouldn't have failed the test." },
+    { type: "Transform the Sentence", q: "Rewrite using 'I wish': \"I regret not learning to play the piano.\"", a: "I wish I had learned to play the piano." },
+    { type: "Transform the Sentence", q: "Change into the Passive Voice: \"They are building a new hospital downtown.\"", a: "A new hospital is being built downtown." },
+    { type: "Transform the Sentence", q: "Rewrite with negative inversion: \"I have never seen such a breathtaking view.\"", a: "Never have I seen such a breathtaking view." },
+    { type: "Transform the Sentence", q: "Change into Reported Speech: \"He asked me, 'Where did you put the keys?'\"", a: "He asked me where I had put the keys." },
+    { type: "Transform the Sentence", q: "Rewrite using 'Despite': \"Although it was raining heavily, they continued the match.\"", a: "Despite the heavy rain (Despite raining heavily), they continued the match." },
+    { type: "Transform the Sentence", q: "Use Causative 'have': \"A mechanic repaired my car yesterday.\"", a: "I had my car repaired yesterday." },
+    { type: "Transform the Sentence", q: "Rewrite using 'Unless': \"If you don't apologize, she won't forgive you.\"", a: "Unless you apologize, she won't forgive you." },
+    { type: "Transform the Sentence", q: "Change into the Passive Voice: \"Someone has stolen my backpack.\"", a: "My backpack has been stolen." },
+    { type: "Transform the Sentence", q: "Rewrite using 'It's high time': \"You really ought to start looking for a job.\"", a: "It's high time you started looking for a job." },
+    { type: "Transform the Sentence", q: "Rewrite with 'Not only... but also': \"She speaks French and she writes poetry.\"", a: "Not only does she speak French, but she also writes poetry." },
+    { type: "Transform the Sentence", q: "Use a modal of deduction: \"I'm 100% sure he forgot about the meeting.\"", a: "He must have forgotten about the meeting." },
+    { type: "Transform the Sentence", q: "Change into Reported Speech: \"'Don't touch the wet paint,' the guard told us.\"", a: "The guard told us not to touch the wet paint." },
+    { type: "Transform the Sentence", q: "Rewrite using 'Had I known': \"If I had known you were sick, I would have visited you.\"", a: "Had I known you were sick, I would have visited you." },
+    { type: "Transform the Sentence", q: "Change into the Passive Voice: \"They will announce the winner tomorrow.\"", a: "The winner will be announced tomorrow." },
+    { type: "Transform the Sentence", q: "Rewrite using 'would rather': \"I prefer you not to smoke in here.\"", a: "I would rather you didn't smoke in here." },
+    { type: "Transform the Sentence", q: "Combine using a non-defining relative clause: \"My uncle lives in Canada. He is an architect.\"", a: "My uncle, who is an architect, lives in Canada." },
+    { type: "Transform the Sentence", q: "Use a modal of past impossibility: \"It was impossible for her to finish it in ten minutes.\"", a: "She couldn't (can't) have finished it in ten minutes." },
+    { type: "Transform the Sentence", q: "Rewrite using 'Hardly': \"As soon as we sat down, the phone rang.\"", a: "Hardly had we sat down when the phone rang." },
+    { type: "Transform the Sentence", q: "Change into Active Voice: \"The entire bridge was destroyed by the storm.\"", a: "The storm destroyed the entire bridge." },
+    { type: "Transform the Sentence", q: "Rewrite using 'in case': \"Take an umbrella because it might rain later.\"", a: "Take an umbrella in case it rains later." },
+    { type: "Transform the Sentence", q: "Rewrite using 'so... that': \"The speech was extremely inspiring, and everyone applauded.\"", a: "The speech was so inspiring that everyone applauded." },
+    { type: "Transform the Sentence", q: "Change into Reported Speech: \"'I will call you as soon as I land,' Tom promised.\"", a: "Tom promised (that) he would call me as soon as he landed." },
+    { type: "Transform the Sentence", q: "Rewrite using 'Used to' vs 'Be used to': \"Working night shifts is normal for me now.\"", a: "I am used to working night shifts now." },
+
+    // Unscramble (26)
+    { type: "Unscramble the Sentence", q: "had - known - I - earlier - would - have - helped - I", a: "Had I known earlier, I would have helped." },
+    { type: "Unscramble the Sentence", q: "rarely - such - witnessed - have - we - dedication", a: "Rarely have we witnessed such dedication." },
+    { type: "Unscramble the Sentence", q: "by - novel - the - written - was - famous - a - author", a: "The novel was written by a famous author." },
+    { type: "Unscramble the Sentence", q: "despite - tired - feeling - finished - she - marathon - the", a: "Despite feeling tired, she finished the marathon." },
+    { type: "Unscramble the Sentence", q: "wish - I - had - taken - I - opportunity - that", a: "I wish I had taken that opportunity." },
+    { type: "Unscramble the Sentence", q: "not - only - did - win - she - broke - she - record - the", a: "Not only did she win, but she also broke the record." },
+    { type: "Unscramble the Sentence", q: "must - left - have - they - before - storm - the - started", a: "They must have left before the storm started." },
+    { type: "Unscramble the Sentence", q: "unless - action - take - we - worsen - will - situation - the", a: "Unless we take action, the situation will worsen." },
+    { type: "Unscramble the Sentence", q: "asked - whether - he - had - I - completed - assignment - the", a: "He asked whether I had completed the assignment." },
+    { type: "Unscramble the Sentence", q: "being - is - bridge - the - repaired - currently", a: "The bridge is currently being repaired." },
+    { type: "Unscramble the Sentence", q: "no - sooner - arrived - had - than - began - concert - the", a: "No sooner had we arrived than the concert began." },
+    { type: "Unscramble the Sentence", q: "whose - student - the - won - essay - prize - first - was - thrilled", a: "The student whose essay won first prize was thrilled." },
+    { type: "Unscramble the Sentence", q: "should - have - consulted - you - doctor - a - sooner", a: "You should have consulted a doctor sooner." },
+    { type: "Unscramble the Sentence", q: "had - car - his - serviced - yesterday - he", a: "He had his car serviced yesterday." },
+    { type: "Unscramble the Sentence", q: "more - the - practice - you - fluent - more - become - you", a: "The more you practice, the more fluent you become." },
+    { type: "Unscramble the Sentence", q: "scarcely - believe - could - eyes - my - I", a: "Scarcely could I believe my eyes." },
+    { type: "Unscramble the Sentence", q: "high - time - it - is - took - responsibility - they", a: "It is high time they took responsibility." },
+    { type: "Unscramble the Sentence", q: "been - had - waiting - hours - two - for - we - arrived - bus - the - when", a: "We had been waiting for two hours when the bus arrived." },
+    { type: "Unscramble the Sentence", q: "allegedly - suspect - the - fled - country - the", a: "The suspect allegedly fled the country." },
+    { type: "Unscramble the Sentence", q: "under - circumstances - no - reveal - should - password - your - you", a: "Under no circumstances should you reveal your password." },
+    { type: "Unscramble the Sentence", q: "rather - would - I - stayed - home - at - we - tonight", a: "I would rather we stayed at home tonight." },
+    { type: "Unscramble the Sentence", q: "likely - is - project - the - be - to - postponed", a: "The project is likely to be postponed." },
+    { type: "Unscramble the Sentence", q: "having - finished - report - the - went - home - she", a: "Having finished the report, she went home." },
+    { type: "Unscramble the Sentence", q: "were - I - you - in - shoes - accept - would - I - offer - the", a: "Were I in your shoes, I would accept the offer." },
+    { type: "Unscramble the Sentence", q: "by - next - month - graduated - will - have - she", a: "By next month, she will have graduated." },
+    { type: "Unscramble the Sentence", q: "so - complex - was - problem - the - few - could - solve - it", a: "So complex was the problem that few could solve it." }
+  ]
+};
+
+/* ==========================================================================
+   CORES DISPONÍVEIS PARA OS BARCOS E SVG DO MODELO ÚNICO
+   ========================================================================== */
+const BOAT_COLORS = [
+  { id: 'red',    name: 'Vermelho', hull: '#dc2626', sail: '#fef2f2', trim: '#991b1b' },
+  { id: 'blue',   name: 'Azul Royal', hull: '#2563eb', sail: '#eff6ff', trim: '#1e40af' },
+  { id: 'green',  name: 'Verde Esmeralda', hull: '#16a34a', sail: '#f0fdf4', trim: '#166534' },
+  { id: 'gold',   name: 'Amarelo Ouro', hull: '#eab308', sail: '#fefce8', trim: '#a16207' },
+  { id: 'purple', name: 'Roxo', hull: '#9333ea', sail: '#faf5ff', trim: '#6b21a8' },
+  { id: 'orange', name: 'Laranja', hull: '#ea580c', sail: '#fff7ed', trim: '#9a3412' }
+];
+
+function getBoatSVG(colorObj, size = 38) {
+  return `
+    <svg width="${size}" height="${size}" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="30" y="10" width="4" height="34" rx="2" fill="#451a03"/>
+      <path d="M34 12 L52 38 L34 38 Z" fill="${colorObj.sail}" stroke="${colorObj.trim}" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M29 16 L14 38 L29 38 Z" fill="${colorObj.hull}" fill-opacity="0.85" stroke="${colorObj.trim}" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M32 9 L42 12 L32 15 Z" fill="${colorObj.hull}"/>
+      <path d="M8 42 H56 L49 54 H15 L8 42 Z" fill="${colorObj.hull}" stroke="${colorObj.trim}" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M12 47 H52" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  `;
+}
+
+/* ==========================================================================
+   ALERTA SONORO SUAVE (WEB AUDIO API - SEM ARQUIVO EXTERNO)
+   ========================================================================== */
+function playTimeUpSound() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const now = ctx.currentTime;
+
+    [523.25, 392.00].forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now + idx * 0.18);
+      gain.gain.setValueAtTime(0.18, now + idx * 0.18);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.18 + 0.35);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + idx * 0.18);
+      osc.stop(now + idx * 0.18 + 0.36);
+    });
+  } catch (e) {}
+}
+
+/* ==========================================================================
+   ESTADO GLOBAL DO JOGO
+   ========================================================================== */
+const COLS = ['A', 'B', 'C', 'D', 'E'];
+const ROWS = [1, 2, 3, 4];
+
+const state = {
+  p1: { name: 'Team Sharks', colorId: 'red', shipCoord: null, score: 0, hits: 0 },
+  p2: { name: 'Team Pirates', colorId: 'blue', shipCoord: null, score: 0, hits: 0 },
+  level: 'basic',
+  minutes: 5,
+  placingPlayer: 1,
+  tempSelectedCoord: null,
+  currentTurn: 1,
+  revealedCells: { 1: new Set(), 2: new Set() },
+  questionDeck: [],
+  activeChallenge: null,
+  challengeSeconds: 10,
+  challengeInterval: null,
+  timerSeconds: 300,
+  timerInterval: null,
+  isPaused: false,
+  gameOver: false
+};
+
+/* ==========================================================================
+   INICIALIZAÇÃO DA TELA DE CONFIGURAÇÃO
+   ========================================================================== */
+function getColorObj(id) {
+  return BOAT_COLORS.find(c => c.id === id) || BOAT_COLORS[0];
+}
+
+function renderSetupSwatches() {
+  const p1Wrap = document.getElementById('p1-swatches');
+  const p2Wrap = document.getElementById('p2-swatches');
+  p1Wrap.innerHTML = '';
+  p2Wrap.innerHTML = '';
+
+  BOAT_COLORS.forEach(c => {
+    const btn1 = document.createElement('button');
+    btn1.type = 'button';
+    btn1.className = 'swatch-btn' + (state.p1.colorId === c.id ? ' selected' : '') + (state.p2.colorId === c.id ? ' disabled' : '');
+    btn1.style.backgroundColor = c.hull;
+    btn1.title = c.name;
+    btn1.disabled = state.p2.colorId === c.id;
+    btn1.onclick = () => {
+      state.p1.colorId = c.id;
+      renderSetupSwatches();
+    };
+    p1Wrap.appendChild(btn1);
+
+    const btn2 = document.createElement('button');
+    btn2.type = 'button';
+    btn2.className = 'swatch-btn' + (state.p2.colorId === c.id ? ' selected' : '') + (state.p1.colorId === c.id ? ' disabled' : '');
+    btn2.style.backgroundColor = c.hull;
+    btn2.title = c.name;
+    btn2.disabled = state.p1.colorId === c.id;
+    btn2.onclick = () => {
+      state.p2.colorId = c.id;
+      renderSetupSwatches();
+    };
+    p2Wrap.appendChild(btn2);
+  });
+
+  document.getElementById('p1-boat-preview').innerHTML = getBoatSVG(getColorObj(state.p1.colorId), 44);
+  document.getElementById('p2-boat-preview').innerHTML = getBoatSVG(getColorObj(state.p2.colorId), 44);
+}
+
+document.querySelectorAll('#level-pills .pill-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('#level-pills .pill-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.level = btn.dataset.level;
+  };
+});
+
+document.querySelectorAll('#time-pills .pill-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('#time-pills .pill-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.minutes = parseInt(btn.dataset.minutes, 10);
+  };
+});
+
+renderSetupSwatches();
+
+/* ==========================================================================
+   FLUXO DE POSICIONAMENTO SECRETO DOS BARCOS
+   ========================================================================== */
+document.getElementById('btn-start-setup').onclick = () => {
+  const n1 = document.getElementById('p1-name').value.trim();
+  const n2 = document.getElementById('p2-name').value.trim();
+  state.p1.name = n1 || 'Team 1';
+  state.p2.name = n2 || 'Team 2';
+  state.p1.shipCoord = null;
+  state.p2.shipCoord = null;
+  state.placingPlayer = 1;
+
+  document.getElementById('screen-setup').classList.add('hidden');
+  document.getElementById('screen-place').classList.remove('hidden');
+  showPrivacyCover(1);
+};
+
+document.getElementById('btn-place-back').onclick = () => {
+  document.getElementById('screen-place').classList.add('hidden');
+  document.getElementById('screen-setup').classList.remove('hidden');
+};
+
+function showPrivacyCover(playerNum) {
+  const playerObj = playerNum === 1 ? state.p1 : state.p2;
+  const opponentObj = playerNum === 1 ? state.p2 : state.p1;
+  document.getElementById('place-privacy-cover').classList.remove('hidden');
+  document.getElementById('place-board-area').classList.add('hidden');
+  document.getElementById('privacy-title').textContent = `Vez de "${playerObj.name}" esconder o barco`;
+  document.getElementById('privacy-desc').textContent = `Atenção professor: certifique-se de que "${opponentObj.name}" não está olhando para a tela!`;
+}
+
+document.getElementById('btn-reveal-placer').onclick = () => {
+  document.getElementById('place-privacy-cover').classList.add('hidden');
+  document.getElementById('place-board-area').classList.remove('hidden');
+  state.tempSelectedCoord = null;
+  document.getElementById('btn-confirm-ship').disabled = true;
+
+  const playerObj = state.placingPlayer === 1 ? state.p1 : state.p2;
+  document.getElementById('placer-heading').textContent = `${playerObj.name}: Escolha a casa do seu barco`;
+  renderSecretGrid(playerObj);
+};
+
+function renderSecretGrid(playerObj) {
+  const grid = document.getElementById('secret-grid');
+  grid.innerHTML = '';
+
+  grid.appendChild(createCoordEl(''));
+  COLS.forEach(c => grid.appendChild(createCoordEl(c)));
+
+  ROWS.forEach(r => {
+    grid.appendChild(createCoordEl(r));
+    COLS.forEach(c => {
+      const coord = `${c}${r}`;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'cell-btn';
+      btn.textContent = coord;
+      btn.onclick = () => {
+        state.tempSelectedCoord = coord;
+        grid.querySelectorAll('.cell-btn').forEach(b => {
+          b.classList.remove('setup-selected');
+          b.innerHTML = b.dataset.coord;
+        });
+        btn.classList.add('setup-selected');
+        btn.innerHTML = getBoatSVG(getColorObj(playerObj.colorId), 32);
+        document.getElementById('btn-confirm-ship').disabled = false;
+      };
+      btn.dataset.coord = coord;
+      grid.appendChild(btn);
+    });
+  });
+}
+
+document.getElementById('btn-confirm-ship').onclick = () => {
+  if (!state.tempSelectedCoord) return;
+  if (state.placingPlayer === 1) {
+    state.p1.shipCoord = state.tempSelectedCoord;
+    state.placingPlayer = 2;
+    showPrivacyCover(2);
+  } else {
+    state.p2.shipCoord = state.tempSelectedCoord;
+    startMatch();
+  }
+};
+
+function createCoordEl(text) {
+  const div = document.createElement('div');
+  div.className = 'coord-label';
+  div.textContent = text;
+  return div;
+}
+
+/* ==========================================================================
+   MOTOR DA PARTIDA E EMBARALHAMENTO DAS 240 QUESTÕES
+   ========================================================================== */
+function shuffleArray(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function startMatch() {
+  state.p1.score = 0;
+  state.p2.score = 0;
+  state.p1.hits = 0;
+  state.p2.hits = 0;
+  state.currentTurn = 1;
+  state.revealedCells = { 1: new Set(), 2: new Set() };
+  state.questionDeck = shuffleArray(QUESTION_BANK[state.level]);
+  state.timerSeconds = state.minutes * 60;
+  state.isPaused = false;
+  state.gameOver = false;
+
+  document.getElementById('screen-place').classList.add('hidden');
+  document.getElementById('screen-game').classList.remove('hidden');
+
+  const levelNames = { basic: 'BÁSICO', intermediate: 'INTERMEDIÁRIO', advanced: 'AVANÇADO' };
+  document.getElementById('hud-level-badge').textContent = levelNames[state.level];
+  document.getElementById('hud-p1-name').textContent = state.p1.name;
+  document.getElementById('hud-p2-name').textContent = state.p2.name;
+  document.getElementById('hud-p1-icon').innerHTML = getBoatSVG(getColorObj(state.p1.colorId), 24);
+  document.getElementById('hud-p2-icon').innerHTML = getBoatSVG(getColorObj(state.p2.colorId), 24);
+  document.getElementById('board-title-1').textContent = `Tabuleiro: ${state.p1.name}`;
+  document.getElementById('board-title-2').textContent = `Tabuleiro: ${state.p2.name}`;
+
+  updateScoreHUD();
+  renderBothBoards();
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(state.timerInterval);
+  updateTimerDisplay();
+  state.timerInterval = setInterval(() => {
+    if (state.isPaused || state.gameOver) return;
+    state.timerSeconds--;
+    updateTimerDisplay();
+    if (state.timerSeconds <= 0) {
+      clearInterval(state.timerInterval);
+      finishGame('time');
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(Math.max(0, state.timerSeconds) / 60);
+  const s = Math.max(0, state.timerSeconds) % 60;
+  const el = document.getElementById('game-timer');
+  el.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  if (state.timerSeconds <= 20 && state.timerSeconds > 0) {
+    el.classList.add('urgent');
+  } else {
+    el.classList.remove('urgent');
+  }
+}
+
+function updateScoreHUD() {
+  document.getElementById('hud-p1-pts').textContent = state.p1.score;
+  document.getElementById('hud-p2-pts').textContent = state.p2.score;
+
+  const s1 = document.getElementById('score-p1');
+  const s2 = document.getElementById('score-p2');
+  s1.classList.toggle('active-turn', state.currentTurn === 1);
+  s2.classList.toggle('active-turn', state.currentTurn === 2);
+
+  const attacker = state.currentTurn === 1 ? state.p1 : state.p2;
+  const defender = state.currentTurn === 1 ? state.p2 : state.p1;
+  document.getElementById('turn-banner').innerHTML = `
+    ${getBoatSVG(getColorObj(attacker.colorId), 26)}
+    <span>Vez de <strong>${attacker.name}</strong> atacar o tabuleiro de <strong>${defender.name}</strong></span>
+  `;
+
+  const w1 = document.getElementById('board-wrap-1');
+  const w2 = document.getElementById('board-wrap-2');
+  if (state.currentTurn === 1) {
+    w1.classList.add('inactive-board');
+    w1.classList.remove('target-board');
+    w2.classList.remove('inactive-board');
+    w2.classList.add('target-board');
+    document.getElementById('board-status-1').textContent = 'Aguardando';
+    document.getElementById('board-status-2').textContent = '🎯 Clique para atacar';
+  } else {
+    w2.classList.add('inactive-board');
+    w2.classList.remove('target-board');
+    w1.classList.remove('inactive-board');
+    w1.classList.add('target-board');
+    document.getElementById('board-status-2').textContent = 'Aguardando';
+    document.getElementById('board-status-1').textContent = '🎯 Clique para atacar';
+  }
+}
+
+function renderBothBoards() {
+  renderBoard(1, document.getElementById('grid-1'));
+  renderBoard(2, document.getElementById('grid-2'));
+}
+
+function renderBoard(boardOwnerNum, container) {
+  container.innerHTML = '';
+  container.appendChild(createCoordEl(''));
+  COLS.forEach(c => container.appendChild(createCoordEl(c)));
+
+  const ownerObj = boardOwnerNum === 1 ? state.p1 : state.p2;
+  const revealedSet = state.revealedCells[boardOwnerNum];
+  const isTargetableBoard = (state.currentTurn === 1 && boardOwnerNum === 2) || (state.currentTurn === 2 && boardOwnerNum === 1);
+
+  ROWS.forEach(r => {
+    container.appendChild(createCoordEl(r));
+    COLS.forEach(c => {
+      const coord = `${c}${r}`;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'cell-btn';
+
+      if (revealedSet.has(coord)) {
+        btn.disabled = true;
+        if (ownerObj.shipCoord === coord) {
+          btn.classList.add('revealed-ship');
+          btn.innerHTML = getBoatSVG(getColorObj(ownerObj.colorId), 34);
+        } else {
+          btn.classList.add('revealed-water');
+          btn.textContent = '🌊';
+        }
+      } else {
+        btn.textContent = coord;
+        btn.disabled = !isTargetableBoard || state.gameOver;
+        btn.onclick = () => handleAttackCell(boardOwnerNum, coord);
+      }
+
+      container.appendChild(btn);
+    });
+  });
+}
+
+function handleAttackCell(boardOwnerNum, coord) {
+  if (state.gameOver || state.isPaused) return;
+  const defenderObj = boardOwnerNum === 1 ? state.p1 : state.p2;
+  state.revealedCells[boardOwnerNum].add(coord);
+  renderBothBoards();
+
+  if (defenderObj.shipCoord === coord) {
+    const attackerObj = state.currentTurn === 1 ? state.p1 : state.p2;
+    attackerObj.score += 10;
+    attackerObj.hits += 1;
+    updateScoreHUD();
+    setTimeout(() => {
+      finishGame('sunk', attackerObj);
+    }, 550);
+    return;
+  }
+
+  const question = state.questionDeck.pop() || QUESTION_BANK[state.level][0];
+  openChallengeModal(coord, question);
+}
+
+/* ==========================================================================
+   MODAL DE DESAFIO EM INGLÊS + CRONÔMETRO DE 10 SEGUNDOS
+   ========================================================================== */
+function openChallengeModal(coord, questionObj) {
+  state.isPaused = true;
+  state.activeChallenge = questionObj;
+
+  const formattedCoord = `${coord[0]}, ${numberToEnglishWord(coord[1])}`;
+  document.getElementById('challenge-coord-badge').textContent = `Coordenada ${coord} ("${formattedCoord}") • Água!`;
+  document.getElementById('challenge-type-label').textContent = `${questionObj.type} • Vale +10 pontos`;
+  document.getElementById('challenge-text').textContent = questionObj.q;
+
+  const ansBox = document.getElementById('teacher-answer-box');
+  ansBox.textContent = `Gabarito / Sugestão: ${questionObj.a}`;
+  ansBox.classList.add('hidden');
+  document.getElementById('btn-toggle-answer').textContent = '👁️ Mostrar Gabarito / Sugestão (Professor)';
+
+  document.getElementById('modal-challenge').classList.remove('hidden');
+  startChallengeCountdown();
+}
+
+function startChallengeCountdown() {
+  clearInterval(state.challengeInterval);
+  state.challengeSeconds = 10;
+
+  const timerText = document.getElementById('challenge-timer-text');
+  const progressBar = document.getElementById('challenge-progress-bar');
+  const timeupAlert = document.getElementById('challenge-timeup-alert');
+
+  timerText.className = 'challenge-timer-header';
+  timerText.innerHTML = `⏱️ Tempo para responder: <span id="challenge-seconds">10</span>s`;
+  progressBar.className = 'challenge-progress-fill';
+  progressBar.style.width = '100%';
+  timeupAlert.classList.add('hidden');
+
+  state.challengeInterval = setInterval(() => {
+    state.challengeSeconds--;
+    const secSpan = document.getElementById('challenge-seconds');
+    if (secSpan) secSpan.textContent = Math.max(0, state.challengeSeconds);
+
+    const pct = Math.max(0, (state.challengeSeconds / 10) * 100);
+    progressBar.style.width = `${pct}%`;
+
+    if (state.challengeSeconds <= 5 && state.challengeSeconds > 0) {
+      timerText.classList.add('warning');
+      progressBar.classList.add('warning');
+    }
+
+    if (state.challengeSeconds <= 0) {
+      clearInterval(state.challengeInterval);
+      timerText.classList.remove('warning');
+      timerText.classList.add('expired');
+      timerText.innerHTML = `⏰ Tempo esgotado (0s)`;
+      progressBar.classList.remove('warning');
+      progressBar.classList.add('expired');
+      timeupAlert.classList.remove('hidden');
+      playTimeUpSound();
+    }
+  }, 1000);
+}
+
+function numberToEnglishWord(n) {
+  return { '1': 'One', '2': 'Two', '3': 'Three', '4': 'Four' }[n] || n;
+}
+
+document.getElementById('btn-toggle-answer').onclick = () => {
+  const ansBox = document.getElementById('teacher-answer-box');
+  const isHidden = ansBox.classList.contains('hidden');
+  ansBox.classList.toggle('hidden');
+  document.getElementById('btn-toggle-answer').textContent = isHidden
+    ? '🙈 Ocultar Gabarito'
+    : '👁️ Mostrar Gabarito / Sugestão (Professor)';
+};
+
+document.getElementById('btn-answer-correct').onclick = () => resolveChallenge(true);
+document.getElementById('btn-answer-wrong').onclick = () => resolveChallenge(false);
+
+function resolveChallenge(isCorrect) {
+  clearInterval(state.challengeInterval);
+
+  const attackerObj = state.currentTurn === 1 ? state.p1 : state.p2;
+  if (isCorrect) {
+    attackerObj.score += 10;
+    attackerObj.hits += 1;
+  }
+
+  document.getElementById('modal-challenge').classList.add('hidden');
+  state.isPaused = false;
+
+  if (state.revealedCells[1].size >= 20 && state.revealedCells[2].size >= 20) {
+    finishGame('time');
+    return;
+  }
+
+  state.currentTurn = state.currentTurn === 1 ? 2 : 1;
+  updateScoreHUD();
+  renderBothBoards();
+}
+
+/* ==========================================================================
+   BOTÃO VOLTAR AO INÍCIO COM CONFIRMAÇÃO ESTILIZADA
+   ========================================================================== */
+document.getElementById('btn-back-home').onclick = () => {
+  state.isPaused = true;
+  document.getElementById('modal-exit').classList.remove('hidden');
+};
+
+document.getElementById('btn-cancel-exit').onclick = () => {
+  document.getElementById('modal-exit').classList.add('hidden');
+  state.isPaused = false;
+};
+
+document.getElementById('btn-confirm-exit').onclick = () => {
+  clearInterval(state.timerInterval);
+  clearInterval(state.challengeInterval);
+  document.getElementById('modal-exit').classList.add('hidden');
+  document.getElementById('screen-game').classList.add('hidden');
+  document.getElementById('screen-setup').classList.remove('hidden');
+};
+
+/* ==========================================================================
+   FIM DE JOGO E GERAÇÃO DE IMAGEM COMPROVANTE (CANVAS)
+   ========================================================================== */
+function finishGame(reasonType, sunkWinner = null) {
+  state.gameOver = true;
+  clearInterval(state.timerInterval);
+  clearInterval(state.challengeInterval);
+
+  state.revealedCells[1].add(state.p1.shipCoord);
+  state.revealedCells[2].add(state.p2.shipCoord);
+  renderBothBoards();
+
+  let winnerTitle = '';
+  let reasonText = '';
+
+  if (reasonType === 'sunk' && sunkWinner) {
+    winnerTitle = `🏆 Vitória de ${sunkWinner.name}!`;
+    reasonText = `Vitória por AFUNDAMENTO! ${sunkWinner.name} encontrou e afundou o barco adversário primeiro.`;
+  } else {
+    if (state.p1.score > state.p2.score) {
+      winnerTitle = `🏆 Vitória de ${state.p1.name}!`;
+      reasonText = `Vitória por PONTOS ao fim do tempo (${state.p1.score} pts contra ${state.p2.score} pts).`;
+    } else if (state.p2.score > state.p1.score) {
+      winnerTitle = `🏆 Vitória de ${state.p2.name}!`;
+      reasonText = `Vitória por PONTOS ao fim do tempo (${state.p2.score} pts contra ${state.p1.score} pts).`;
+    } else {
+      winnerTitle = `🤝 Empate Técnico!`;
+      reasonText = `O tempo acabou e ambas as equipes terminaram empatadas com ${state.p1.score} pontos!`;
+    }
+  }
+
+  document.getElementById('gameover-heading').textContent = winnerTitle;
+  document.getElementById('gameover-reason').textContent = reasonText;
+
+  generateResultImage(winnerTitle, reasonText);
+  document.getElementById('modal-gameover').classList.remove('hidden');
+}
+
+function generateResultImage(winnerTitle, reasonText) {
+  const canvas = document.getElementById('result-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#bae6fd');
+  grad.addColorStop(1, '#7dd3fc');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+  ctx.lineWidth = 4;
+  for (let y = 50; y < H; y += 70) {
+    ctx.beginPath();
+    for (let x = 0; x <= W; x += 60) {
+      ctx.quadraticCurveTo(x + 15, y - 12, x + 30, y);
+      ctx.quadraticCurveTo(x + 45, y + 12, x + 60, y);
+    }
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
+  roundRect(ctx, 45, 38, W - 90, H - 76, 28, true, false);
+
+  ctx.fillStyle = '#0b4f78';
+  ctx.font = 'bold 24px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('⚓ ENGLISH NAVAL BATTLE — RESULTADO OFICIAL', W / 2, 92);
+
+  ctx.fillStyle = '#072f49';
+  ctx.font = 'bold 42px sans-serif';
+  ctx.fillText(winnerTitle, W / 2, 152);
+
+  ctx.fillStyle = '#334155';
+  ctx.font = '600 21px sans-serif';
+  wrapCanvasText(ctx, reasonText, W / 2, 194, W - 160, 28);
+
+  drawPlayerSummaryBox(ctx, 85, 255, 345, 195, state.p1);
+  drawPlayerSummaryBox(ctx, 470, 255, 345, 195, state.p2);
+
+  const levelMap = { basic: 'Nível Básico', intermediate: 'Nível Intermediário', advanced: 'Nível Avançado' };
+  ctx.fillStyle = '#64748b';
+  ctx.font = 'bold 17px sans-serif';
+  ctx.fillText(`${levelMap[state.level]} • 10 pontos por desafio acertado`, W / 2, 482);
+
+  const dataUrl = canvas.toDataURL('image/png');
+  document.getElementById('gameover-image').src = dataUrl;
+}
+
+function drawPlayerSummaryBox(ctx, x, y, w, h, player) {
+  const cObj = getColorObj(player.colorId);
+  ctx.fillStyle = '#f0f9ff';
+  ctx.strokeStyle = cObj.hull;
+  ctx.lineWidth = 4;
+  roundRect(ctx, x, y, w, h, 20, true, true);
+
+  ctx.fillStyle = cObj.hull;
+  roundRect(ctx, x + 16, y + 16, w - 32, 42, 12, true, false);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 21px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`${player.name} (${cObj.name})`, x + w / 2, y + 44);
+
+  ctx.fillStyle = '#072f49';
+  ctx.font = 'bold 48px sans-serif';
+  ctx.fillText(`${player.score} pts`, x + w / 2, y + 118);
+
+  ctx.fillStyle = '#475569';
+  ctx.font = '600 18px sans-serif';
+  ctx.fillText(`Acertos: ${player.hits} • Barco em: ${player.shipCoord}`, x + w / 2, y + 162);
+}
+
+function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+  if (fill) ctx.fill();
+  if (stroke) ctx.stroke();
+}
+
+function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(' ');
+  let line = '';
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + ' ';
+    if (ctx.measureText(testLine).width > maxWidth && n > 0) {
+      ctx.fillText(line.trim(), x, y);
+      line = words[n] + ' ';
+      y += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  ctx.fillText(line.trim(), x, y);
+}
+
+document.getElementById('btn-download-result').onclick = () => {
+  const link = document.createElement('a');
+  link.download = `naval-battle-resultado-${Date.now()}.png`;
+  link.href = document.getElementById('gameover-image').src;
+  link.click();
+};
+
+document.getElementById('btn-new-game').onclick = () => {
+  document.getElementById('modal-gameover').classList.add('hidden');
+  document.getElementById('screen-game').classList.add('hidden');
+  document.getElementById('screen-setup').classList.remove('hidden');
+};
+</script>
+</body>
+</html>
