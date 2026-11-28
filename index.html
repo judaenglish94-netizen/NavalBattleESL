@@ -754,9 +754,9 @@
         <div class="setting-group">
           <span>Nível dos Desafios</span>
           <div id="level-pills" class="pill-group">
-            <button type="button" class="pill-btn active" data-level="basic">Básico (10s)</button>
-            <button type="button" class="pill-btn" data-level="intermediate">Intermediário (15s)</button>
-            <button type="button" class="pill-btn" data-level="advanced">Avançado (20s)</button>
+            <button type="button" class="pill-btn active" data-level="basic">Básico</button>
+            <button type="button" class="pill-btn" data-level="intermediate">Intermediário</button>
+            <button type="button" class="pill-btn" data-level="advanced">Avançado</button>
           </div>
         </div>
 
@@ -1490,9 +1490,9 @@ function startMatch() {
   document.getElementById('screen-game').classList.remove('hidden');
 
   const levelNames = {
-    basic: 'BÁSICO (10s)',
-    intermediate: 'INTERMEDIÁRIO (15s)',
-    advanced: 'AVANÇADO (20s)'
+    basic: 'BÁSICO',
+    intermediate: 'INTERMEDIÁRIO',
+    advanced: 'AVANÇADO'
   };
   document.getElementById('hud-level-badge').textContent = levelNames[state.level];
   document.getElementById('hud-p1-name').textContent = state.p1.name;
