@@ -592,7 +592,7 @@
     margin-bottom: 8px;
   }
 
-  /* CRONÔMETRO DE 10 SEGUNDOS DO DESAFIO */
+  /* CRONÔMETRO DINÂMICO DO DESAFIO (10s / 15s / 20s) */
   .challenge-timer-wrap {
     margin: 8px auto 12px;
     width: 100%;
@@ -754,9 +754,9 @@
         <div class="setting-group">
           <span>Nível dos Desafios</span>
           <div id="level-pills" class="pill-group">
-            <button type="button" class="pill-btn active" data-level="basic">Básico</button>
-            <button type="button" class="pill-btn" data-level="intermediate">Intermediário</button>
-            <button type="button" class="pill-btn" data-level="advanced">Avançado</button>
+            <button type="button" class="pill-btn active" data-level="basic">Básico (10s)</button>
+            <button type="button" class="pill-btn" data-level="intermediate">Intermediário (15s)</button>
+            <button type="button" class="pill-btn" data-level="advanced">Avançado (20s)</button>
           </div>
         </div>
 
@@ -879,7 +879,7 @@
         Responda para marcar +10 pontos
       </div>
 
-      <!-- Contador de 10 segundos -->
+      <!-- Contador dinâmico por nível (10s / 15s / 20s) -->
       <div class="challenge-timer-wrap">
         <div id="challenge-timer-text" class="challenge-timer-header">
           ⏱️ Tempo para responder: <span id="challenge-seconds">10</span>s
@@ -889,7 +889,7 @@
         </div>
       </div>
 
-      <!-- Notificação ao estourar os 10 segundos -->
+      <!-- Notificação ao estourar o tempo -->
       <div id="challenge-timeup-alert" class="timeup-alert hidden">
         ⏰ Tempo esgotado! Professor, marque abaixo se o aluno acertou ou errou.
       </div>
@@ -1225,6 +1225,15 @@ const QUESTION_BANK = {
 };
 
 /* ==========================================================================
+   TEMPO POR NÍVEL DE DIFICULDADE (10s BÁSICO, 15s INTERMEDIÁRIO, 20s AVANÇADO)
+   ========================================================================== */
+const LEVEL_CHALLENGE_SECONDS = {
+  basic: 10,
+  intermediate: 15,
+  advanced: 20
+};
+
+/* ==========================================================================
    CORES DISPONÍVEIS PARA OS BARCOS E SVG DO MODELO ÚNICO
    ========================================================================== */
 const BOAT_COLORS = [
@@ -1291,6 +1300,7 @@ const state = {
   revealedCells: { 1: new Set(), 2: new Set() },
   questionDeck: [],
   activeChallenge: null,
+  challengeMaxSeconds: 10,
   challengeSeconds: 10,
   challengeInterval: null,
   timerSeconds: 300,
@@ -1479,7 +1489,11 @@ function startMatch() {
   document.getElementById('screen-place').classList.add('hidden');
   document.getElementById('screen-game').classList.remove('hidden');
 
-  const levelNames = { basic: 'BÁSICO', intermediate: 'INTERMEDIÁRIO', advanced: 'AVANÇADO' };
+  const levelNames = {
+    basic: 'BÁSICO (10s)',
+    intermediate: 'INTERMEDIÁRIO (15s)',
+    advanced: 'AVANÇADO (20s)'
+  };
   document.getElementById('hud-level-badge').textContent = levelNames[state.level];
   document.getElementById('hud-p1-name').textContent = state.p1.name;
   document.getElementById('hud-p2-name').textContent = state.p2.name;
@@ -1618,7 +1632,7 @@ function handleAttackCell(boardOwnerNum, coord) {
 }
 
 /* ==========================================================================
-   MODAL DE DESAFIO EM INGLÊS + CRONÔMETRO DE 10 SEGUNDOS
+   MODAL DE DESAFIO EM INGLÊS + CRONÔMETRO DINÂMICO (10s / 15s / 20s)
    ========================================================================== */
 function openChallengeModal(coord, questionObj) {
   state.isPaused = true;
@@ -1640,14 +1654,19 @@ function openChallengeModal(coord, questionObj) {
 
 function startChallengeCountdown() {
   clearInterval(state.challengeInterval);
-  state.challengeSeconds = 10;
+
+  const maxSec = LEVEL_CHALLENGE_SECONDS[state.level] || 10;
+  const warnThreshold = state.level === 'advanced' ? 7 : 5;
+
+  state.challengeMaxSeconds = maxSec;
+  state.challengeSeconds = maxSec;
 
   const timerText = document.getElementById('challenge-timer-text');
   const progressBar = document.getElementById('challenge-progress-bar');
   const timeupAlert = document.getElementById('challenge-timeup-alert');
 
   timerText.className = 'challenge-timer-header';
-  timerText.innerHTML = `⏱️ Tempo para responder: <span id="challenge-seconds">10</span>s`;
+  timerText.innerHTML = `⏱️ Tempo para responder: <span id="challenge-seconds">${maxSec}</span>s`;
   progressBar.className = 'challenge-progress-fill';
   progressBar.style.width = '100%';
   timeupAlert.classList.add('hidden');
@@ -1657,10 +1676,10 @@ function startChallengeCountdown() {
     const secSpan = document.getElementById('challenge-seconds');
     if (secSpan) secSpan.textContent = Math.max(0, state.challengeSeconds);
 
-    const pct = Math.max(0, (state.challengeSeconds / 10) * 100);
+    const pct = Math.max(0, (state.challengeSeconds / state.challengeMaxSeconds) * 100);
     progressBar.style.width = `${pct}%`;
 
-    if (state.challengeSeconds <= 5 && state.challengeSeconds > 0) {
+    if (state.challengeSeconds <= warnThreshold && state.challengeSeconds > 0) {
       timerText.classList.add('warning');
       progressBar.classList.add('warning');
     }
